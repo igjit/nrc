@@ -11,14 +11,23 @@ nrc <- function(s) {
         paste(collapse = "\n")
 }
 
-to_type <- function(token) {
-    num <- suppressWarnings(as.numeric(token))
+token <- function(s) {
+    num <- suppressWarnings(as.numeric(s))
     if (is.na(num)) {
-        list(ty = token)
+        structure(list(ty = s), class = "token")
     } else {
-        list(ty = TK_NUM, val = num)
+        structure(list(ty = TK_NUM, val = num), class = "token")
     }
 }
+
+ty <- function(x) UseMethod("ty")
+ty.token <- function(x) x$ty
+
+val <- function(x) UseMethod("val")
+val.token <-function(x) x$val
+
+is_num <- function(x) UseMethod("is_num")
+is_num.token <- function(x) x$ty == TK_NUM
 
 tokenize <- function(s) {
     s %>%
@@ -27,7 +36,7 @@ tokenize <- function(s) {
         str_trim %>%
         str_split("\\s+") %>%
         .[[1]] %>%
-        map(to_type)
+        map(token)
 }
 
 translate <- function(tokens) {
@@ -39,8 +48,8 @@ translate <- function(tokens) {
 }
 
 translate_first <- function(token) {
-    if (token$ty != TK_NUM) stop()
-    paste0("  mov rax, ", token$val)
+    if (!is_num(token)) stop()
+    paste0("  mov rax, ", val(token))
 }
 
 translate_rest <- function(tokens) {
@@ -49,11 +58,11 @@ translate_rest <- function(tokens) {
     } else {
         t1 <- tokens[[1]]
         t2 <- tokens[[2]]
-        if (t2$ty != TK_NUM) stop()
-        if (t1$ty == "+") {
+        if (!is_num(t2)) stop()
+        if (ty(t1) == "+") {
             c(paste0("  add rax, ", t2$val),
               translate_rest(tokens[-c(1, 2)]))
-        } else if (t1$ty == "-") {
+        } else if (ty(t1) == "-") {
             c(paste0("  sub rax, ", t2$val),
               translate_rest(tokens[-c(1, 2)]))
         }
