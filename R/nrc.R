@@ -61,10 +61,10 @@ translate_rest <- function(tokens) {
         if (!is_num(t2)) stop()
         if (ty(t1) == "+") {
             c(paste0("  add rax, ", t2$val),
-              translate_rest(tokens[-c(1, 2)]))
+              translate_rest(tail(tokens, -2)))
         } else if (ty(t1) == "-") {
             c(paste0("  sub rax, ", t2$val),
-              translate_rest(tokens[-c(1, 2)]))
+              translate_rest(tail(tokens, -2)))
         }
     }
 }
