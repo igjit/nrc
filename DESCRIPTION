@@ -14,3 +14,5 @@ Imports:
     purrr,
     stringr
 RoxygenNote: 6.0.1
+Suggests: 
+    testthat

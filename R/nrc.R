@@ -1,7 +1,8 @@
 #' @import stringr
 #' @import purrr
 
-TK_NUM <- "NUM"
+TK_NUM <- "TK_NUM"
+ND_NUM <- "ND_NUM"
 
 nrc <- function(s) {
     s %>%
@@ -20,6 +21,14 @@ token <- function(s) {
     }
 }
 
+node <- function(op, lhs, rhs) {
+    structure(list(op = op, lhs = lhs, rhs = rhs), class = "node")
+}
+
+node_num <- function(val) {
+    structure(list(op = ND_NUM, val = val), class = "node")
+}
+
 ty <- function(x) UseMethod("ty")
 ty.token <- function(x) x$ty
 
@@ -28,6 +37,7 @@ val.token <-function(x) x$val
 
 is_num <- function(x) UseMethod("is_num")
 is_num.token <- function(x) x$ty == TK_NUM
+is_num.node <- function(x) x$op == ND_NUM
 
 tokenize <- function(s) {
     s %>%
