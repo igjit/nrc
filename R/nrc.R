@@ -43,8 +43,7 @@ tokenize <- function(s) {
     s %>%
         str_replace_all("([()+\\-*/])", " \\1 ") %>%
         str_trim %>%
-        str_split("\\s+") %>%
-        .[[1]] %>%
+        str_split("\\s+", simplify = TRUE) %>%
         map(token)
 }
 
