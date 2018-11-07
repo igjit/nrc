@@ -41,7 +41,7 @@ is_num.node <- function(x) x$op == ND_NUM
 
 tokenize <- function(s) {
     s %>%
-        str_replace_all("([+\\-])", " \\1 ") %>%
+        str_replace_all("([+\\-*/])", " \\1 ") %>%
         str_trim %>%
         str_split("\\s+") %>%
         .[[1]] %>%
