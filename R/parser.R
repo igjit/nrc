@@ -1,53 +1,52 @@
+#' @importFrom zeallot %<-%
+
 parse <- function(tokens) {
-    ref <- as.environment(list(pos = 1))
-    expr(tokens, ref)
+    expr(tokens, 1)[[1]]
 }
 
-expr <- function(tokens, ref) {
-    lhs <- mul(tokens, ref)
-    if (ref$pos > length(tokens)) {
-        lhs
+expr <- function(tokens, pos) {
+    c(lhs, pos) %<-% mul(tokens, pos)
+    if (pos > length(tokens)) {
+        list(lhs, pos)
     } else {
-        token <- tokens[[ref$pos]]
+        token <- tokens[[pos]]
         op <- ty(token)
         if (op %in% c("+", "-")) {
-            ref$pos <- ref$pos + 1
-            node(op, lhs, expr(tokens, ref))
+            c(rhs, pos) %<-% expr(tokens, pos + 1)
+            list(node(op, lhs, rhs), pos)
         } else {
-            lhs
+            list(lhs, pos)
         }
     }
 }
 
-mul <- function(tokens, ref) {
-    lhs <- term(tokens, ref)
-    if (ref$pos > length(tokens)) {
-        lhs
+mul <- function(tokens, pos) {
+    c(lhs, pos) %<-% term(tokens, pos)
+    if (pos > length(tokens)) {
+        list(lhs, pos)
     } else {
-        token <- tokens[[ref$pos]]
+        token <- tokens[[pos]]
         op <- ty(token)
         if (op %in% c("*", "/")) {
-            ref$pos <- ref$pos + 1
-            node(op, lhs, mul(tokens, ref))
+            c(rhs, pos) %<-% mul(tokens, pos + 1)
+            list(node(op, lhs, rhs), pos)
         } else {
-            lhs
+            list(lhs, pos)
         }
     }
 }
 
-term <- function(tokens, ref) {
-    token <- tokens[[ref$pos]]
+term <- function(tokens, pos) {
+    token <- tokens[[pos]]
     if (is_num(token)) {
-        ref$pos <- ref$pos + 1
-        node_num(val(token))
+        list(node_num(val(token)), pos + 1)
     } else if (ty(token) == "(") {
-        ref$pos <- ref$pos + 1
-        node <- expr(tokens, ref)
-        next_token <- tokens[[ref$pos]]
+        c(node, pos) %<-% expr(tokens, pos + 1)
+        next_token <- tokens[[pos]]
         if (ty(next_token) != ")") {
             stop("missing ): ", ty(next_token))
         }
-        node
+        list(node, pos)
     } else {
         stop("unexpected token: ", ty(token))
     }
