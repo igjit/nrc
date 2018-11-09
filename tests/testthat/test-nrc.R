@@ -7,3 +7,8 @@ test_that("tokenize", {
     expect_equal(tokenize("(1+2)*3"),
                  list(token("("), token(1), token("+"), token(2), token(")"), token("*"), token(3)))
 })
+
+test_that("as.character.node", {
+    expect_equal(as.character(node_num(1)), "1")
+    expect_equal(as.character(node("+", node("*", node_num(1), node_num(2)), node_num(3))), "(+ (* 1 2) 3)")
+})
