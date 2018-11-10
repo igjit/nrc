@@ -46,7 +46,7 @@ term <- function(tokens, pos) {
         if (ty(next_token) != ")") {
             stop("missing ): ", ty(next_token))
         }
-        list(node, pos)
+        list(node, pos + 1)
     } else {
         stop("unexpected token: ", ty(token))
     }
