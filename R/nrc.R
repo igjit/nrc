@@ -7,7 +7,8 @@ ND_NUM <- "ND_NUM"
 nrc <- function(s) {
     s %>%
         tokenize %>%
-        translate %>%
+        parse %>%
+        generate %>%
         c("") %>%
         paste(collapse = "\n")
 }
@@ -56,34 +57,4 @@ tokenize <- function(s) {
         str_trim %>%
         str_split("\\s+", simplify = TRUE) %>%
         map(token)
-}
-
-translate <- function(tokens) {
-    c(".intel_syntax noprefix",
-      ".global main",
-      "main:",
-      translate_first(tokens[[1]]),
-      translate_rest(tokens[-1]))
-}
-
-translate_first <- function(token) {
-    if (!is_num(token)) stop()
-    paste0("  mov rax, ", val(token))
-}
-
-translate_rest <- function(tokens) {
-    if (length(tokens) == 0) {
-        "  ret"
-    } else {
-        t1 <- tokens[[1]]
-        t2 <- tokens[[2]]
-        if (!is_num(t2)) stop()
-        if (ty(t1) == "+") {
-            c(paste0("  add rax, ", t2$val),
-              translate_rest(tail(tokens, -2)))
-        } else if (ty(t1) == "-") {
-            c(paste0("  sub rax, ", t2$val),
-              translate_rest(tail(tokens, -2)))
-        }
-    }
 }
