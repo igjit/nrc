@@ -2,6 +2,7 @@
 #' @import purrr
 
 TK_NUM <- "TK_NUM"
+TK_IDENT <- "TK_IDENT"
 ND_NUM <- "ND_NUM"
 
 nrc <- function(s) {
@@ -15,7 +16,11 @@ nrc <- function(s) {
 token <- function(s) {
     num <- suppressWarnings(as.numeric(s))
     if (is.na(num)) {
-        structure(list(ty = s), class = "token")
+        if (str_detect(s, "^[a-z]$")) {
+            structure(list(ty = TK_IDENT, val = s), class = "token")
+        } else {
+            structure(list(ty = s), class = "token")
+        }
     } else {
         structure(list(ty = TK_NUM, val = num), class = "token")
     }

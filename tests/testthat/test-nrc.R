@@ -1,5 +1,18 @@
 context("nrc.R")
 
+test_that("token", {
+    tk <- token("1")
+    expect_equal(ty(tk), TK_NUM)
+    expect_equal(val(tk), 1)
+
+    tk <- token("a")
+    expect_equal(ty(tk), TK_IDENT)
+    expect_equal(val(tk), "a")
+
+    tk <- token("+")
+    expect_equal(ty(tk), "+")
+})
+
 test_that("tokenize", {
     expect_equal(tokenize("1"), list(token(1)))
     expect_equal(tokenize("1+2"), list(token(1), token("+"), token(2)))
