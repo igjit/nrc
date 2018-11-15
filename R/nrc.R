@@ -4,6 +4,7 @@
 TK_NUM <- "TK_NUM"
 TK_IDENT <- "TK_IDENT"
 ND_NUM <- "ND_NUM"
+ND_IDENT <- "ND_IDENT"
 
 nrc <- function(s) {
     s %>%
@@ -34,8 +35,12 @@ node_num <- function(val) {
     structure(list(op = ND_NUM, val = val), class = "node")
 }
 
+node_ident <- function(val) {
+    structure(list(op = ND_IDENT, val = val), class = "node")
+}
+
 as.character.node <- function(node) {
-    if (is_num(node)) {
+    if (is_num(node) || is_ident(node)) {
         as.character(val(node))
     } else {
         paste0("(",
@@ -54,6 +59,10 @@ val.node <-function(x) x$val
 is_num <- function(x) UseMethod("is_num")
 is_num.token <- function(x) x$ty == TK_NUM
 is_num.node <- function(x) x$op == ND_NUM
+
+is_ident <- function(x) UseMethod("is_ident")
+is_ident.token <- function(x) x$ty == TK_IDENT
+is_ident.node <- function(x) x$op == ND_IDENT
 
 tokenize <- function(s) {
     s %>%

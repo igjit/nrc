@@ -7,4 +7,6 @@ test_that("parse", {
     expect_equal(parse(tokenize("1*2+3")), node("+", node("*", node_num(1), node_num(2)), node_num(3)))
     expect_equal(parse(tokenize("1*(2+3)")), node("*", node_num(1), node("+", node_num(2), node_num(3))))
     expect_equal(parse(tokenize("(1+2)*3")), node("*", node("+", node_num(1), node_num(2)), node_num(3)))
+    expect_equal(parse(tokenize("a=1")), node("=", node_ident("a"), node_num(1)))
+    expect_equal(parse(tokenize("a=b=1")), node("=", node_ident("a"), node("=", node_ident("b"), node_num(1))))
 })

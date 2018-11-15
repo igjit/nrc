@@ -25,4 +25,5 @@ test_that("tokenize", {
 test_that("as.character.node", {
     expect_equal(as.character(node_num(1)), "1")
     expect_equal(as.character(node("+", node("*", node_num(1), node_num(2)), node_num(3))), "(+ (* 1 2) 3)")
+    expect_equal(as.character(node("=", node_ident("a"), node_num(1))), "(= a 1)")
 })
