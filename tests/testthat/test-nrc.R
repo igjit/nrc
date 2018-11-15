@@ -19,6 +19,7 @@ test_that("tokenize", {
     expect_equal(tokenize("1*2/3"), list(token(1), token("*"), token(2), token("/"), token(3)))
     expect_equal(tokenize("(1+2)*3"),
                  list(token("("), token(1), token("+"), token(2), token(")"), token("*"), token(3)))
+    expect_equal(tokenize("a=1"), list(token("a"), token("="), token(1)))
 })
 
 test_that("as.character.node", {
