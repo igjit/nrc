@@ -10,8 +10,7 @@ nrc <- function(s) {
     s %>%
         tokenize %>%
         parse %>%
-        generate %>%
-        paste0("\n", collapse = "")
+        generate
 }
 
 token <- function(s) {
