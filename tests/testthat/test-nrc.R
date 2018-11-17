@@ -50,4 +50,12 @@ test_that("compile", {
 
     expect_true(assemble(compile("(3+5)/2")))
     expect_equal(execute(), 4)
+
+    expect_true(assemble(compile("a = 2 + 3; a * 4")))
+    expect_equal(execute(), 20)
+
+    expect_true(assemble(compile("a = b = 2 + 2; a + b")))
+    expect_equal(execute(), 8)
+
+    expect_error(assemble(compile("a + 1 = 2;")), "invalid lvalue")
 })
