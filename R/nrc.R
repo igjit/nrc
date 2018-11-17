@@ -6,7 +6,7 @@ TK_IDENT <- "TK_IDENT"
 ND_NUM <- "ND_NUM"
 ND_IDENT <- "ND_IDENT"
 
-nrc <- function(s) {
+compile <- function(s) {
     s %>%
         tokenize %>%
         parse %>%
