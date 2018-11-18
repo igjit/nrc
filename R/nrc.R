@@ -19,7 +19,7 @@ token <- function(s) {
         if (str_detect(s, "^[a-z]$")) {
             structure(list(ty = TK_IDENT, val = s), class = "token")
         } else {
-            structure(list(ty = s), class = "token")
+            structure(list(ty = s, val = s), class = "token")
         }
     } else {
         structure(list(ty = TK_NUM, val = num), class = "token")

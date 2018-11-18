@@ -16,7 +16,7 @@ program <- function(tokens, pos) {
             if (ty(token) == ";") {
                 c(list(n_first), program(tokens, pos + 1))
             } else {
-                stop("unexpected token: ", ty(token))
+                stop("unexpected token: ", val(token))
             }
         }
     }
@@ -35,7 +35,7 @@ assign <- function(tokens, pos) {
         } else if (op == ";") {
             list(lhs, pos)
         } else {
-            stop("unexpected token: ", ty(token))
+            stop("unexpected token: ", val(token))
         }
     }
 }
@@ -86,6 +86,6 @@ term <- function(tokens, pos) {
         }
         list(node, pos + 1)
     } else {
-        stop("unexpected token: ", ty(token))
+        stop("unexpected token: ", val(token))
     }
 }
