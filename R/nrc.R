@@ -3,6 +3,7 @@
 
 TK_NUM <- "TK_NUM"
 TK_IDENT <- "TK_IDENT"
+TK_ASSIGN <- "="
 ND_NUM <- "ND_NUM"
 ND_IDENT <- "ND_IDENT"
 
@@ -18,6 +19,8 @@ token <- function(s) {
     if (is.na(num)) {
         if (str_detect(s, "^[a-z]$")) {
             structure(list(ty = TK_IDENT, val = s), class = "token")
+        } else if (s %in% c("=", "<-")) {
+            structure(list(ty = TK_ASSIGN, val = s), class = "token")
         } else {
             structure(list(ty = s, val = s), class = "token")
         }
@@ -65,7 +68,7 @@ is_ident.node <- function(x) x$op == ND_IDENT
 
 tokenize <- function(s) {
     s %>%
-        str_replace_all("([()+\\-*/=;])", " \\1 ") %>%
+        str_replace_all("(<-|[()+\\-*/=;])", " \\1 ") %>%
         str_trim %>%
         str_split("\\s+", simplify = TRUE) %>%
         map(token)

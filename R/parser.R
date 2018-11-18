@@ -29,7 +29,7 @@ assign <- function(tokens, pos) {
     } else {
         token <- tokens[[pos]]
         op <- ty(token)
-        if (op == "=") {
+        if (op == TK_ASSIGN) {
             c(rhs, pos) %<-% assign(tokens, pos + 1)
             list(node(op, lhs, rhs), pos)
         } else if (op == ";") {

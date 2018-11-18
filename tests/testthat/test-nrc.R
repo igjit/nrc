@@ -11,6 +11,9 @@ test_that("token", {
 
     tk <- token("+")
     expect_equal(ty(tk), "+")
+
+    tk <- token("<-")
+    expect_equal(ty(tk), "=")
 })
 
 test_that("tokenize", {
@@ -21,6 +24,7 @@ test_that("tokenize", {
                  list(token("("), token(1), token("+"), token(2), token(")"), token("*"), token(3)))
     expect_equal(tokenize("a=1"), list(token("a"), token("="), token(1)))
     expect_equal(tokenize("a=1;"), list(token("a"), token("="), token(1), token(";")))
+    expect_equal(tokenize("b <- 2"), list(token("b"), token("<-"), token(2)))
 })
 
 test_that("as.character.node", {
@@ -58,4 +62,7 @@ test_that("compile", {
     expect_equal(execute(), 8)
 
     expect_error(assemble(compile("a + 1 = 2;")), "invalid lvalue")
+
+    expect_true(assemble(compile("x <- 1 + 2; x * 2")))
+    expect_equal(execute(), 6)
 })
