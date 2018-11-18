@@ -42,12 +42,12 @@ node_ident <- function(val) {
 }
 
 #' @export
-as.character.node <- function(node) {
-    if (is_num(node) || is_ident(node)) {
-        as.character(val(node))
+as.character.node <- function(x, ...) {
+    if (is_num(x) || is_ident(x)) {
+        as.character(val(x))
     } else {
         paste0("(",
-               paste(lapply(node, as.character), collapse = " "),
+               paste(lapply(x, as.character), collapse = " "),
                ")")
     }
 }
