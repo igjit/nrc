@@ -41,6 +41,7 @@ node_ident <- function(val) {
     structure(list(op = ND_IDENT, val = val), class = "node")
 }
 
+#' @export
 as.character.node <- function(node) {
     if (is_num(node) || is_ident(node)) {
         as.character(val(node))
