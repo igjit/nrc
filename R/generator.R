@@ -1,14 +1,21 @@
 generate <- function(nodes) {
-    c(".intel_syntax noprefix",
-      ".global main",
-      "main:",
-      indent("push rbp",
-             "mov rbp, rsp",
-             "sub rsp, 208"),
-      indent(generate_body(nodes)),
-      indent("mov rsp, rbp",
-             "pop rbp",
-             "ret"))
+    l <- c(".intel_syntax noprefix",
+           ".global main",
+           "main:",
+           indent("push rbp",
+                  "mov rbp, rsp",
+                  "sub rsp, 208"),
+           indent(generate_body(nodes)),
+           indent("mov rsp, rbp",
+                  "pop rbp",
+                  "ret"))
+    class(l) <- "assembly"
+    l
+}
+
+print.assembly <- function (x, ...) {
+    cat(x, sep = "\n")
+    invisible(x)
 }
 
 generate_body <- function(nodes) {
