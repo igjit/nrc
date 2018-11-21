@@ -25,6 +25,8 @@ test_that("tokenize", {
     expect_equal(tokenize("a=1"), list(token("a"), token("="), token(1)))
     expect_equal(tokenize("a=1;"), list(token("a"), token("="), token(1), token(";")))
     expect_equal(tokenize("b <- 2"), list(token("b"), token("<-"), token(2)))
+    expect_equal(tokenize("a==1"), list(token("a"), token("=="), token(1)))
+    expect_equal(tokenize("a!=1"), list(token("a"), token("!="), token(1)))
 })
 
 test_that("as.character.node", {
