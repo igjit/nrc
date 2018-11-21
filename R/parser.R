@@ -23,7 +23,7 @@ program <- function(tokens, pos) {
 }
 
 assign <- function(tokens, pos) {
-    c(lhs, pos) %<-% expr(tokens, pos)
+    c(lhs, pos) %<-% equality(tokens, pos)
     if (pos > length(tokens)) {
         list(lhs, pos)
     } else {
@@ -36,6 +36,22 @@ assign <- function(tokens, pos) {
             list(lhs, pos)
         } else {
             stop("unexpected token: ", val(token))
+        }
+    }
+}
+
+equality <- function(tokens, pos) {
+    c(lhs, pos) %<-% expr(tokens, pos)
+    if (pos > length(tokens)) {
+        list(lhs, pos)
+    } else {
+        token <- tokens[[pos]]
+        op <- ty(token)
+        if (op %in% c("==", "!=")) {
+            c(rhs, pos) %<-% expr(tokens, pos + 1)
+            list(node(op, lhs, rhs), pos)
+        } else {
+            list(lhs, pos)
         }
     }
 }
