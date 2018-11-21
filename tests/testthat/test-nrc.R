@@ -34,35 +34,15 @@ test_that("as.character.node", {
 })
 
 test_that("compile", {
-    expect_true(assemble(compile("0")))
-    expect_equal(execute(), 0)
-
-    expect_true(assemble(compile("42")))
-    expect_equal(execute(), 42)
-
-    expect_true(assemble(compile("5+20-4")))
-    expect_equal(execute(), 21)
-
-    expect_true(assemble(compile(" 12 + 34 - 5 ")))
-    expect_equal(execute(), 41)
-
-    expect_true(assemble(compile("5+6*7")))
-    expect_equal(execute(), 47)
-
-    expect_true(assemble(compile("5*(9-6)")))
-    expect_equal(execute(), 15)
-
-    expect_true(assemble(compile("(3+5)/2")))
-    expect_equal(execute(), 4)
-
-    expect_true(assemble(compile("a = 2 + 3; a * 4")))
-    expect_equal(execute(), 20)
-
-    expect_true(assemble(compile("a = b = 2 + 2; a + b")))
-    expect_equal(execute(), 8)
-
+    expect_equal(execute(assemble(compile("0"))), 0)
+    expect_equal(execute(assemble(compile("42"))), 42)
+    expect_equal(execute(assemble(compile("5+20-4"))), 21)
+    expect_equal(execute(assemble(compile(" 12 + 34 - 5 "))), 41)
+    expect_equal(execute(assemble(compile("5+6*7"))), 47)
+    expect_equal(execute(assemble(compile("5*(9-6)"))), 15)
+    expect_equal(execute(assemble(compile("(3+5)/2"))), 4)
+    expect_equal(execute(assemble(compile("a = 2 + 3; a * 4"))), 20)
+    expect_equal(execute(assemble(compile("a = b = 2 + 2; a + b"))), 8)
     expect_error(assemble(compile("a + 1 = 2;")), "invalid lvalue")
-
-    expect_true(assemble(compile("x <- 1 + 2; x * 2")))
-    expect_equal(execute(), 6)
+    expect_equal(execute(assemble(compile("x <- 1 + 2; x * 2"))), 6)
 })

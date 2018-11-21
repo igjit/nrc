@@ -1,11 +1,12 @@
-assemble <- function(asm) {
-    cat(asm, file = "tmp.s", sep = "\n")
-    ret <- system("gcc -o tmp tmp.s")
+assemble <- function(asm, file = tempfile()) {
+    asm_file <- paste0(file, ".s")
+    cat(asm, file = asm_file, sep = "\n")
+    ret <- system(paste("gcc -o", file, asm_file))
     if (ret == 0) {
-        TRUE
+        file
     } else {
         stop("gcc failed")
     }
 }
 
-execute <- function() (system("./tmp"))
+execute <- function(file) (system(file))
