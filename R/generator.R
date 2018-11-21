@@ -50,7 +50,13 @@ generate_node <- function(node) {
                  "-" = "sub rax, rdi",
                  "*" = "mul rdi",
                  "/" = c("mov rdx, 0",
-                         "div rdi")),
+                         "div rdi"),
+                 "==" = c("cmp rdi, rax",
+                          "sete al",
+                          "movzb rax, al"),
+                 "!=" = c("cmp rdi, rax",
+                          "setne al",
+                          "movzb rax, al")),
           "push rax")
     }
 }
