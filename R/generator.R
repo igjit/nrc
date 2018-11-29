@@ -1,3 +1,8 @@
+#' Generate assembly code
+#'
+#' @param nodes list of node
+#' @return assembly
+#' @export
 generate <- function(nodes) {
     l <- c(".intel_syntax noprefix",
            ".global main",
@@ -13,6 +18,7 @@ generate <- function(nodes) {
     l
 }
 
+#' @export
 print.assembly <- function (x, ...) {
     cat(x, sep = "\n")
     invisible(x)

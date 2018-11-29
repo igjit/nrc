@@ -7,6 +7,11 @@ TK_ASSIGN <- "="
 ND_NUM <- "ND_NUM"
 ND_IDENT <- "ND_IDENT"
 
+#' Compile R code
+#'
+#' @param s source
+#' @return assembly
+#' @export
 compile <- function(s) {
     s %>%
         tokenize %>%
