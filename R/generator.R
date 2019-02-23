@@ -14,8 +14,7 @@ generate <- function(nodes) {
            indent("mov rsp, rbp",
                   "pop rbp",
                   "ret"))
-    class(l) <- "assembly"
-    l
+    structure(l, class = "assembly")
 }
 
 #' @export
