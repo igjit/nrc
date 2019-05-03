@@ -24,30 +24,31 @@ print.assembly <- function (x, ...) {
 }
 
 generate_body <- function(nodes) {
+    vars <- var_map()
     nodes %>%
-        map(generate_node) %>%
+        map(generate_node, vars) %>%
         map2("pop rax", c) %>%
         flatten_chr
 }
 
-generate_node <- function(node) {
+generate_node <- function(node, vars) {
     if (is_num(node)) {
         paste0("push ", val(node))
     } else if (is_ident(node)) {
-        c(generate_lvalue(node),
+        c(generate_lvalue(node, vars),
           "pop rax",
           "mov rax, [rax]",
           "push rax")
     } else if (node$op == "=") {
-        c(generate_lvalue(node$lhs),
-          generate_node(node$rhs),
+        c(generate_lvalue(node$lhs, vars),
+          generate_node(node$rhs, vars),
           "pop rdi",
           "pop rax",
           "mov [rax], rdi",
           "push rdi")
     } else {
-        c(generate_node(node$lhs),
-          generate_node(node$rhs),
+        c(generate_node(node$lhs, vars),
+          generate_node(node$rhs, vars),
           "pop rdi",
           "pop rax",
           switch(node$op,
@@ -66,9 +67,9 @@ generate_node <- function(node) {
     }
 }
 
-generate_lvalue <- function(node) {
+generate_lvalue <- function(node, vars) {
     if (is_ident(node)) {
-        adr <- (utf8ToInt("z") - utf8ToInt(val(node)) + 1) * 8
+        adr <- index_of(val(node), vars) * 8
         c("mov rax, rbp",
           paste0("sub rax, ", adr),
           "push rax")
