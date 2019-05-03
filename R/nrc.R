@@ -61,8 +61,8 @@ ty <- function(x) UseMethod("ty")
 ty.token <- function(x) x$ty
 
 val <- function(x) UseMethod("val")
-val.token <-function(x) x$val
-val.node <-function(x) x$val
+val.token <- function(x) x$val
+val.node <- function(x) x$val
 
 is_num <- function(x) UseMethod("is_num")
 is_num.token <- function(x) x$ty == TK_NUM
