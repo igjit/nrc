@@ -4,13 +4,14 @@
 #' @return assembly
 #' @export
 generate <- function(nodes) {
+    c(body, n_var) %<-% generate_body(nodes)
     l <- c(".intel_syntax noprefix",
            ".global main",
            "main:",
            indent("push rbp",
                   "mov rbp, rsp",
-                  "sub rsp, 208"),
-           indent(generate_body(nodes)),
+                  paste0("sub rsp, ", n_var * 8)),
+           indent(body),
            indent("mov rsp, rbp",
                   "pop rbp",
                   "ret"))
@@ -25,10 +26,11 @@ print.assembly <- function (x, ...) {
 
 generate_body <- function(nodes) {
     vars <- var_map()
-    nodes %>%
+    body <- nodes %>%
         map(generate_node, vars) %>%
         map2("pop rax", c) %>%
         flatten_chr
+    list(body, length(vars))
 }
 
 generate_node <- function(node, vars) {
