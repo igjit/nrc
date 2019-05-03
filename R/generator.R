@@ -78,3 +78,13 @@ generate_lvalue <- function(node) {
 }
 
 indent <- function(...) paste0("  ", c(...))
+
+var_map <- function() new.env(parent = emptyenv())
+
+index_of <- function(var, var_map) {
+    if (is.null(var_map[[var]])) {
+        index <- length(var_map) + 1L
+        var_map[[var]] <- index
+    }
+    var_map[[var]]
+}
