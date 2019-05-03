@@ -22,7 +22,7 @@ compile <- function(s) {
 token <- function(s) {
     num <- suppressWarnings(as.numeric(s))
     if (is.na(num)) {
-        if (str_detect(s, "^[a-z]$")) {
+        if (str_detect(s, "^(\\.|\\.?[A-Za-z][A-Za-z0-9_.]*)$")) {
             structure(list(ty = TK_IDENT, val = s), class = "token")
         } else if (s %in% c("=", "<-")) {
             structure(list(ty = TK_ASSIGN, val = s), class = "token")

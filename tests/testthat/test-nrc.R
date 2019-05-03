@@ -14,6 +14,18 @@ test_that("token", {
 
     tk <- token("<-")
     expect_equal(ty(tk), "=")
+
+    tk <- token(".")
+    expect_equal(ty(tk), TK_IDENT)
+    expect_equal(val(tk), ".")
+
+    tk <- token(".a")
+    expect_equal(ty(tk), TK_IDENT)
+    expect_equal(val(tk), ".a")
+
+    tk <- token("var_name1")
+    expect_equal(ty(tk), TK_IDENT)
+    expect_equal(val(tk), "var_name1")
 })
 
 test_that("tokenize", {
@@ -50,4 +62,5 @@ test_that("compile", {
     expect_equal(execute(assemble(compile("1+2==3"))), 1)
     expect_equal(execute(assemble(compile("2==3"))), 0)
     expect_equal(execute(assemble(compile("2!=3"))), 1)
+    expect_equal(execute(assemble(compile("foo <- 3; bar <- 2; foo - bar"))), 1)
 })
