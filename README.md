@@ -17,3 +17,12 @@ You can install nrc from github with:
 # install.packages("devtools")
 devtools::install_github("igjit/nrc")
 ```
+
+Note: currently nrc only works on Linux.
+
+Try in Docker:
+
+``` sh
+$ docker run --rm -it rocker/tidyverse:3.6.0 R -q
+> devtools::install_github("igjit/nrc")
+```
