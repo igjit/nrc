@@ -13,48 +13,48 @@ ND_IDENT <- "ND_IDENT"
 #' @return assembly
 #' @export
 compile <- function(s) {
-    s %>%
-        tokenize %>%
-        parse %>%
-        generate
+  s %>%
+    tokenize %>%
+    parse %>%
+    generate
 }
 
 token <- function(s) {
-    num <- suppressWarnings(as.numeric(s))
-    if (is.na(num)) {
-        if (str_detect(s, "^(\\.|\\.?[A-Za-z][A-Za-z0-9_.]*)$")) {
-            structure(list(ty = TK_IDENT, val = s), class = "token")
-        } else if (s %in% c("=", "<-")) {
-            structure(list(ty = TK_ASSIGN, val = s), class = "token")
-        } else {
-            structure(list(ty = s, val = s), class = "token")
-        }
+  num <- suppressWarnings(as.numeric(s))
+  if (is.na(num)) {
+    if (str_detect(s, "^(\\.|\\.?[A-Za-z][A-Za-z0-9_.]*)$")) {
+      structure(list(ty = TK_IDENT, val = s), class = "token")
+    } else if (s %in% c("=", "<-")) {
+      structure(list(ty = TK_ASSIGN, val = s), class = "token")
     } else {
-        structure(list(ty = TK_NUM, val = num), class = "token")
+      structure(list(ty = s, val = s), class = "token")
     }
+  } else {
+    structure(list(ty = TK_NUM, val = num), class = "token")
+  }
 }
 
 node <- function(op, lhs, rhs) {
-    structure(list(op = op, lhs = lhs, rhs = rhs), class = "node")
+  structure(list(op = op, lhs = lhs, rhs = rhs), class = "node")
 }
 
 node_num <- function(val) {
-    structure(list(op = ND_NUM, val = val), class = "node")
+  structure(list(op = ND_NUM, val = val), class = "node")
 }
 
 node_ident <- function(val) {
-    structure(list(op = ND_IDENT, val = val), class = "node")
+  structure(list(op = ND_IDENT, val = val), class = "node")
 }
 
 #' @export
 as.character.node <- function(x, ...) {
-    if (is_num(x) || is_ident(x)) {
-        as.character(val(x))
-    } else {
-        paste0("(",
-               paste(lapply(x, as.character), collapse = " "),
-               ")")
-    }
+  if (is_num(x) || is_ident(x)) {
+    as.character(val(x))
+  } else {
+    paste0("(",
+           paste(lapply(x, as.character), collapse = " "),
+           ")")
+  }
 }
 
 ty <- function(x) UseMethod("ty")
@@ -73,9 +73,9 @@ is_ident.token <- function(x) x$ty == TK_IDENT
 is_ident.node <- function(x) x$op == ND_IDENT
 
 tokenize <- function(s) {
-    s %>%
-        str_replace_all("(<-|==|!=|[()+\\-*/=;])", " \\1 ") %>%
-        str_trim %>%
-        str_split("\\s+", simplify = TRUE) %>%
-        map(token)
+  s %>%
+    str_replace_all("(<-|==|!=|[()+\\-*/=;])", " \\1 ") %>%
+    str_trim %>%
+    str_split("\\s+", simplify = TRUE) %>%
+    map(token)
 }
