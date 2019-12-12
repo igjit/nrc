@@ -1,5 +1,5 @@
 test:
-	Rscript -e 'devtools::test(stop_on_failure = TRUE)'
+	docker-compose run --rm r Rscript -e 'devtools::test()'
 
 clean:
 	rm -f  *.o tmp*

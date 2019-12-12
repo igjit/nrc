@@ -1,0 +1,8 @@
+version: "3"
+services:
+  r:
+    build: .
+    volumes:
+      - .:/opt/nrc
+    working_dir: /opt/nrc
+    command: /usr/local/bin/R
