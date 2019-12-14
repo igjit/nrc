@@ -73,7 +73,7 @@ expr <- function(tokens, pos) {
 }
 
 mul <- function(tokens, pos) {
-  c(lhs, pos) %<-% term(tokens, pos)
+  c(lhs, pos) %<-% primary(tokens, pos)
   if (pos > length(tokens)) {
     list(lhs, pos)
   } else {
@@ -88,7 +88,7 @@ mul <- function(tokens, pos) {
   }
 }
 
-term <- function(tokens, pos) {
+primary <- function(tokens, pos) {
   token <- tokens[[pos]]
   if (is_num(token)) {
     list(node_num(val(token)), pos + 1)
