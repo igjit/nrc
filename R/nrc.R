@@ -46,6 +46,10 @@ node_ident <- function(val) {
   structure(list(op = ND_IDENT, val = val), class = "node")
 }
 
+node_call <- function(op, args) {
+  structure(list(op = op, args = args), class = c("node_call", "node"))
+}
+
 #' @export
 as.character.node <- function(x, ...) {
   if (is_num(x) || is_ident(x)) {
@@ -74,7 +78,7 @@ is_ident.node <- function(x) x$op == ND_IDENT
 
 tokenize <- function(s) {
   s %>%
-    str_replace_all("(<-|==|!=|[()+\\-*/=;])", " \\1 ") %>%
+    str_replace_all("(<-|==|!=|[()+\\-*/=;,])", " \\1 ") %>%
     str_trim %>%
     str_split("\\s+", simplify = TRUE) %>%
     map(token)

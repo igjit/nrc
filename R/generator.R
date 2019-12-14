@@ -7,6 +7,10 @@ generate <- function(nodes) {
   c(body, n_var) %<-% generate_body(nodes)
   l <- c(".intel_syntax noprefix",
          ".global plus, main",
+         "plus:",
+         indent("add rsi, rdi",
+                "mov rax, rsi",
+                "ret"),
          "main:",
          indent("push rbp",
                 "mov rbp, rsp",
@@ -33,6 +37,8 @@ generate_body <- function(nodes) {
   list(body, length(vars))
 }
 
+ARG_REGS <- c("rdi", "rsi", "rdx", "rcx", "r8", "r9")
+
 generate_node <- function(node, vars) {
   if (is_num(node)) {
     paste0("push ", val(node))
@@ -48,6 +54,17 @@ generate_node <- function(node, vars) {
       "pop rax",
       "mov [rax], rdi",
       "push rdi")
+  } else if (is(node, "node_call")) {
+    push_values <- node$args %>%
+      map(~ generate_node(.)) %>%
+      flatten_chr
+    pop_args <- head(ARG_REGS, length(node$args)) %>%
+      rev %>%
+      paste0("pop ", .)
+    c(push_values,
+      pop_args,
+      paste0("call ", node$op),
+      "push rax")
   } else {
     c(generate_node(node$lhs, vars),
       generate_node(node$rhs, vars),

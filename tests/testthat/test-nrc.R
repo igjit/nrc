@@ -39,6 +39,8 @@ test_that("tokenize", {
   expect_equal(tokenize("b <- 2"), list(token("b"), token("<-"), token(2)))
   expect_equal(tokenize("a==1"), list(token("a"), token("=="), token(1)))
   expect_equal(tokenize("a!=1"), list(token("a"), token("!="), token(1)))
+  expect_equal(tokenize("foo()"), list(token("foo"), token("("), token(")")))
+  expect_equal(tokenize("foo(1, 2)"), list(token("foo"), token("("), token(1), token(","), token(2), token(")")))
 })
 
 test_that("as.character.node", {
@@ -67,4 +69,5 @@ test_that("compile", {
   expect_equal(execute(assemble(compile("2==3"))), 0)
   expect_equal(execute(assemble(compile("2!=3"))), 1)
   expect_equal(execute(assemble(compile("foo <- 3; bar <- 2; foo - bar"))), 1)
+  expect_equal(execute(assemble(compile("plus(10 * 4, 2)"))), 42)
 })
