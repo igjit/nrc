@@ -50,6 +50,10 @@ node_call <- function(op, args) {
   structure(list(op = op, args = args), class = c("node_call", "node"))
 }
 
+node_function <- function(args, expr) {
+  structure(list(args = args, expr = expr), class = c("node_function", "node"))
+}
+
 #' @export
 as.character.node <- function(x, ...) {
   if (is_num(x) || is_ident(x)) {

@@ -93,7 +93,9 @@ primary <- function(tokens, pos) {
   if (is_num(token)) {
     list(node_num(val(token)), pos + 1)
   } else if (is_ident(token)) {
-    if (pos < length(tokens) && ty(tokens[[pos + 1]]) == "(") {
+    if (val(token) == "function") {
+      func(tokens, pos)
+    } else if (pos < length(tokens) && ty(tokens[[pos + 1]]) == "(") {
       call(tokens, pos)
     } else {
       list(node_ident(val(token)), pos + 1)
@@ -108,6 +110,23 @@ primary <- function(tokens, pos) {
   } else {
     stop("unexpected token: ", val(token))
   }
+}
+
+func <- function(tokens, pos) {
+  token <- tokens[[pos]]
+  if (pos < length(tokens) && ty(tokens[[pos + 1]]) != "(") {
+    stop("unexpected token: ", val(tokens[[pos + 1]]))
+  }
+  pos <- pos + 2
+  args <- list()
+  while (ty(tokens[[pos]]) != ")") {
+    ident <- node_ident(val(tokens[[pos]]))
+    args <- c(args, list(ident))
+    pos <- pos + 1
+    if (ty(tokens[[pos]]) == ",") pos <- pos + 1
+  }
+  c(expr, pos) %<-% expr(tokens, pos + 1)
+  list(node_function(args, expr), pos)
 }
 
 call <- function(tokens, pos) {
