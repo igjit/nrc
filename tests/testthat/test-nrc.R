@@ -48,6 +48,11 @@ test_that("as.character.node", {
 })
 
 test_that("compile", {
+  expect_error(compile("a + 1 = 2;"), "invalid lvalue")
+
+  # test only on Linux
+  skip_on_os(c("windows", "mac", "solaris"))
+
   expect_equal(execute(assemble(compile("0"))), 0)
   expect_equal(execute(assemble(compile("42"))), 42)
   expect_equal(execute(assemble(compile("5+20-4"))), 21)
@@ -57,7 +62,6 @@ test_that("compile", {
   expect_equal(execute(assemble(compile("(3+5)/2"))), 4)
   expect_equal(execute(assemble(compile("a = 2 + 3; a * 4"))), 20)
   expect_equal(execute(assemble(compile("a = b = 2 + 2; a + b"))), 8)
-  expect_error(compile("a + 1 = 2;"), "invalid lvalue")
   expect_equal(execute(assemble(compile("x <- 1 + 2; x * 2"))), 6)
   expect_equal(execute(assemble(compile("1+2==3"))), 1)
   expect_equal(execute(assemble(compile("2==3"))), 0)
