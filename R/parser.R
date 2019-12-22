@@ -96,7 +96,8 @@ primary <- function(tokens, pos) {
     if (val(token) == "function") {
       func(tokens, pos)
     } else if (pos < length(tokens) && ty(tokens[[pos + 1]]) == "(") {
-      call(tokens, pos)
+      c(args, pos) %<-% call_args(tokens, pos + 1)
+      list(node_call(val(token), args), pos)
     } else {
       list(node_ident(val(token)), pos + 1)
     }
@@ -129,14 +130,13 @@ func <- function(tokens, pos) {
   list(node_function(args, expr), pos)
 }
 
-call <- function(tokens, pos) {
-  token <- tokens[[pos]]
-  pos <- pos + 2
+call_args <- function(tokens, pos) {
+  pos <- pos + 1
   args <- list()
   while (ty(tokens[[pos]]) != ")") {
     c(node, pos) %<-% expr(tokens, pos)
     args <- c(args, list(node))
     if (ty(tokens[[pos]]) == ",") pos <- pos + 1
   }
-  list(node_call(val(token), args), pos + 1)
+  list(args, pos + 1)
 }
