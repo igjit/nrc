@@ -26,6 +26,9 @@ assign <- function(tokens, pos) {
   c(lhs, pos) %<-% equality(tokens, pos)
   if (pos > length(tokens)) {
     list(lhs, pos)
+  } else if (pos < length(tokens) && ty(tokens[[pos]]) == "(") {
+    c(args, pos) %<-% call_args(tokens, pos)
+    list(node_call(lhs, args), pos)
   } else {
     token <- tokens[[pos]]
     op <- ty(token)
