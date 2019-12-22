@@ -97,7 +97,8 @@ primary <- function(tokens, pos) {
       func(tokens, pos)
     } else if (pos < length(tokens) && ty(tokens[[pos + 1]]) == "(") {
       c(args, pos) %<-% call_args(tokens, pos + 1)
-      list(node_call(val(token), args), pos)
+      func <- node_ident(val(token))
+      list(node_call(func, args), pos)
     } else {
       list(node_ident(val(token)), pos + 1)
     }

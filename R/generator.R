@@ -63,7 +63,7 @@ generate_node <- function(node, vars) {
       paste0("pop ", .)
     c(push_values,
       pop_args,
-      paste0("call ", node$op),
+      paste0("call ", val(node$func)),
       "push rax")
   } else {
     c(generate_node(node$lhs, vars),

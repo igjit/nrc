@@ -6,6 +6,7 @@ TK_IDENT <- "TK_IDENT"
 TK_ASSIGN <- "="
 ND_NUM <- "ND_NUM"
 ND_IDENT <- "ND_IDENT"
+ND_CALL <- "ND_CALL"
 
 #' Compile R code
 #'
@@ -46,8 +47,8 @@ node_ident <- function(val) {
   structure(list(op = ND_IDENT, val = val), class = "node")
 }
 
-node_call <- function(op, args) {
-  structure(list(op = op, args = args), class = c("node_call", "node"))
+node_call <- function(func, args) {
+  structure(list(op = ND_CALL, func = func, args = args), class = c("node_call", "node"))
 }
 
 node_function <- function(args, expr) {
