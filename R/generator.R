@@ -29,23 +29,40 @@ print.assembly <- function (x, ...) {
 
 generate_function <- function(name, func) {
   c(paste0(name, ":"),
-    indent(generate_function_body(func),
+    indent(generate_function_body(func$expr, func$args),
            "pop rax",
            "ret"))
 }
 
-generate_function_body <- function(func) {
-  node <- func$expr
+generate_function_body <- function(node, args) {
   if (is_num(node)) {
     paste0("push ", val(node))
   } else if (is_ident(node)) {
-    stop("TODO")
+    arg_names <- map_chr(args, val)
+    index <- which(arg_names == val(node))
+    paste0("push ", ARG_REGS[index])
   } else if (node$op == "=") {
     stop("TODO")
   } else if (is(node, "node_call")) {
     stop("TODO")
   } else {
-    generate_operation(node, NA)
+    c(generate_function_body(node$lhs, args),
+      generate_function_body(node$rhs, args),
+      "pop rdi",
+      "pop rax",
+      switch(node$op,
+             "+" = "add rax, rdi",
+             "-" = "sub rax, rdi",
+             "*" = "mul rdi",
+             "/" = c("mov rdx, 0",
+                     "div rdi"),
+             "==" = c("cmp rdi, rax",
+                      "sete al",
+                      "movzb rax, al"),
+             "!=" = c("cmp rdi, rax",
+                      "setne al",
+                      "movzb rax, al")),
+      "push rax")
   }
 }
 
