@@ -4,9 +4,12 @@
 #' @return assembly
 #' @export
 generate <- function(nodes) {
+  functions <- nodes$functions
   nodes <- nodes$nodes
   c(body, n_var) %<-% generate_body(nodes)
   l <- c(".intel_syntax noprefix",
+         paste0(".global ", paste0(c(names(functions), "main"),  collapse = ", ")),
+         names(functions) %>% map(~ generate_function(., functions[[.]])) %>% flatten_chr,
          "main:",
          indent("push rbp",
                 "mov rbp, rsp",
@@ -22,6 +25,28 @@ generate <- function(nodes) {
 print.assembly <- function (x, ...) {
   cat(x, sep = "\n")
   invisible(x)
+}
+
+generate_function <- function(name, func) {
+  c(paste0(name, ":"),
+    indent(generate_function_body(func),
+           "pop rax",
+           "ret"))
+}
+
+generate_function_body <- function(func) {
+  node <- func$expr
+  if (is_num(node)) {
+    paste0("push ", val(node))
+  } else if (is_ident(node)) {
+    stop("TODO")
+  } else if (node$op == "=") {
+    stop("TODO")
+  } else if (is(node, "node_call")) {
+    stop("TODO")
+  } else {
+    generate_operation(node, NA)
+  }
 }
 
 generate_body <- function(nodes) {

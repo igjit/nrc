@@ -69,4 +69,5 @@ test_that("compile", {
   expect_equal(execute(assemble(compile("2==3"))), 0)
   expect_equal(execute(assemble(compile("2!=3"))), 1)
   expect_equal(execute(assemble(compile("foo <- 3; bar <- 2; foo - bar"))), 1)
+  expect_equal(execute(assemble(compile("(function () 2)()"))), 2)
 })
