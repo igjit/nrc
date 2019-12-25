@@ -4,6 +4,7 @@
 #' @return assembly
 #' @export
 generate <- function(nodes) {
+  nodes <- nodes$nodes
   c(body, n_var) %<-% generate_body(nodes)
   l <- c(".intel_syntax noprefix",
          ".global plus, main",
