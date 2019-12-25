@@ -7,11 +7,6 @@ generate <- function(nodes) {
   nodes <- nodes$nodes
   c(body, n_var) %<-% generate_body(nodes)
   l <- c(".intel_syntax noprefix",
-         ".global plus, main",
-         "plus:",
-         indent("add rsi, rdi",
-                "mov rax, rsi",
-                "ret"),
          "main:",
          indent("push rbp",
                 "mov rbp, rsp",
