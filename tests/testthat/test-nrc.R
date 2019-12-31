@@ -1,5 +1,3 @@
-context("nrc.R")
-
 test_that("token", {
   tk <- token("1")
   expect_equal(ty(tk), TK_NUM)

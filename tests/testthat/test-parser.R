@@ -1,5 +1,3 @@
-context("parser.R")
-
 test_that("parse", {
   expect_equal(parse(tokenize("1")), list(node_num(1)))
   expect_equal(parse(tokenize("1+2")), list(node("+", node_num(1), node_num(2))))
