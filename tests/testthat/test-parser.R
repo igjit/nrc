@@ -18,4 +18,10 @@ test_that("parse", {
   expect_equal(parse(tokenize("foo()")), list(node_call(node_ident("foo"), list())))
   expect_equal(parse(tokenize("foo(1)")), list(node_call(node_ident("foo"), list(node_num(1)))))
   expect_equal(parse(tokenize("foo(1, 2)")), list(node_call(node_ident("foo"), list(node_num(1), node_num(2)))))
+  expect_equal(parse(tokenize("function() 1")), list(node_function(list(), node_num(1))))
+  expect_equal(parse(tokenize("function(a, b) a + b")), list(node_function(list(node_ident("a"), node_ident("b")),
+                                                                           node("+", node_ident("a"), node_ident("b")))))
+  expect_equal(parse(tokenize("function() 1; 2")), list(node_function(list(), node_num(1)), node_num(2)))
+  expect_equal(parse(tokenize("add2 <- function(x) x + 2")),
+               list(node("=", node_ident("add2"), node_function(list(node_ident("x")), node("+", node_ident("x"), node_num(2))))))
 })
