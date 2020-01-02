@@ -15,4 +15,7 @@ test_that("parse", {
   expect_equal(parse(tokenize("a==2+3")), list(node("==", node_ident("a"), node("+", node_num(2), node_num(3)))))
   expect_equal(parse(tokenize("a-1!=2")), list(node("!=", node("-", node_ident("a"), node_num(1)), node_num(2))))
   expect_equal(parse(tokenize("var_name1=2")), list(node("=", node_ident("var_name1"), node_num(2))))
+  expect_equal(parse(tokenize("foo()")), list(node_call(node_ident("foo"), list())))
+  expect_equal(parse(tokenize("foo(1)")), list(node_call(node_ident("foo"), list(node_num(1)))))
+  expect_equal(parse(tokenize("foo(1, 2)")), list(node_call(node_ident("foo"), list(node_num(1), node_num(2)))))
 })
