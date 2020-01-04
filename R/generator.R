@@ -19,7 +19,7 @@ generate <- function(nodes) {
 }
 
 #' @export
-print.assembly <- function (x, ...) {
+print.assembly <- function(x, ...) {
   cat(x, sep = "\n")
   invisible(x)
 }
