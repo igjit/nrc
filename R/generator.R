@@ -81,6 +81,19 @@ generate_node <- function(node, vars) {
       "pop rax",
       "mov [rax], rdi",
       "push rdi")
+  } else if (is(node, "node_call")) {
+    push_values <- node$args %>%
+      map(~ generate_node(.)) %>%
+      flatten_chr
+    pop_args <- if (length(node$args) > 0) {
+                  head(ARG_REGS, length(node$args)) %>%
+                    rev %>%
+                    paste0("pop ", .)
+                }
+    c(push_values,
+      pop_args,
+      paste0("call ", val(node$func)),
+      "push rax")
   } else {
     c(generate_node(node$lhs, vars),
       generate_node(node$rhs, vars),
