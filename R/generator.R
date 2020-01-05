@@ -1,12 +1,17 @@
+ARG_REGS <- c("rdi", "rsi", "rdx", "rcx", "r8", "r9")
+
 #' Generate assembly code
 #'
 #' @param nodes list of node
 #' @return assembly
 #' @export
 generate <- function(nodes) {
+  functions <- nodes$functions
+  nodes <- nodes$nodes
   c(body, n_var) %<-% generate_body(nodes)
   l <- c(".intel_syntax noprefix",
-         ".global main",
+         paste0(".global ", paste0(c(names(functions), "main"),  collapse = ", ")),
+         names(functions) %>% map(~ generate_function(., functions[[.]])) %>% flatten_chr,
          "main:",
          indent("push rbp",
                 "mov rbp, rsp",
@@ -22,6 +27,34 @@ generate <- function(nodes) {
 print.assembly <- function(x, ...) {
   cat(x, sep = "\n")
   invisible(x)
+}
+
+generate_function <- function(name, func) {
+  c(paste0(name, ":"),
+    indent(generate_function_body(func$expr, func$args),
+           "pop rax",
+           "ret"))
+}
+
+generate_function_body <- function(node, args) {
+  if (is_num(node)) {
+    paste0("push ", val(node))
+  } else if (is_ident(node)) {
+    arg_names <- map_chr(args, ~ val(.))
+    index <- which(arg_names == val(node))
+    paste0("push ", ARG_REGS[index])
+  } else if (node$op == "=") {
+    stop("TODO")
+  } else if (is(node, "node_call")) {
+    stop("TODO")
+  } else {
+    c(generate_function_body(node$lhs, args),
+      generate_function_body(node$rhs, args),
+      "pop rdi",
+      "pop rax",
+      generate_binop(node),
+      "push rax")
+  }
 }
 
 generate_body <- function(nodes) {

@@ -1,3 +1,7 @@
+convert <- function(nodes) {
+  extract_functions(nodes)
+}
+
 extract_functions <- function(nodes, index = 1, acm = list(functions = list(), nodes = list())) {
   if (length(nodes) < index) {
     acm

@@ -17,6 +17,7 @@ compile <- function(s) {
   s %>%
     tokenize %>%
     parse %>%
+    convert %>%
     generate
 }
 
