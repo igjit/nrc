@@ -53,18 +53,7 @@ generate_node <- function(node, vars) {
       generate_node(node$rhs, vars),
       "pop rdi",
       "pop rax",
-      switch(node$op,
-             "+" = "add rax, rdi",
-             "-" = "sub rax, rdi",
-             "*" = "mul rdi",
-             "/" = c("mov rdx, 0",
-                     "div rdi"),
-             "==" = c("cmp rdi, rax",
-                      "sete al",
-                      "movzb rax, al"),
-             "!=" = c("cmp rdi, rax",
-                      "setne al",
-                      "movzb rax, al")),
+      generate_binop(node),
       "push rax")
   }
 }
@@ -78,6 +67,21 @@ generate_lvalue <- function(node, vars) {
   } else {
     stop("invalid lvalue")
   }
+}
+
+generate_binop <- function(node) {
+  switch(node$op,
+         "+" = "add rax, rdi",
+         "-" = "sub rax, rdi",
+         "*" = "mul rdi",
+         "/" = c("mov rdx, 0",
+                 "div rdi"),
+         "==" = c("cmp rdi, rax",
+                  "sete al",
+                  "movzb rax, al"),
+         "!=" = c("cmp rdi, rax",
+                  "setne al",
+                  "movzb rax, al"))
 }
 
 indent <- function(...) paste0("  ", c(...))
