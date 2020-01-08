@@ -11,7 +11,7 @@ generate <- function(nodes) {
   c(body, n_var) %<-% generate_body(nodes)
   l <- c(".intel_syntax noprefix",
          paste0(".global ", paste0(c(names(functions), "main"),  collapse = ", ")),
-         names(functions) %>% map(~ generate_function(., functions[[.]])) %>% flatten_chr,
+         functions %>% imap(~ generate_function(.y, .x)) %>% flatten_chr,
          "main:",
          indent("push rbp",
                 "mov rbp, rsp",
