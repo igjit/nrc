@@ -39,3 +39,14 @@ Try in Docker:
 $ docker run --rm -it rocker/tidyverse:3.6.2 R -q
 > remotes::install_github("igjit/nrc")
 ```
+
+## How to play
+
+```{r}
+library(nrc)
+
+compile("1 + 2")
+compile("1 + 2") %>% assemble() %>% execute()
+compile("a <- 2; a * 3") %>% assemble() %>% execute()
+compile("add2 <- function(x) x + 2; add2(40)") %>% assemble() %>% execute()
+```
