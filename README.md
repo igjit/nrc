@@ -19,7 +19,7 @@ compiler written in R.
 You can install nrc from github with:
 
 ``` r
-# install.packages("devtools")
+# install.packages("remotes")
 remotes::install_github("igjit/nrc")
 ```
 
